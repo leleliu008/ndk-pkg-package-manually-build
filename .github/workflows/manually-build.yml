@@ -83,7 +83,7 @@ jobs:
       - run: ndk-pkg install android-${{ github.event.inputs.sdk-api-level }}/${{ github.event.inputs.target-abi }}/${{ github.event.inputs.package-name }} --build-type=${{ github.event.inputs.build-type }} --link-type=${{ github.event.inputs.link-type }} ${{ github.event.inputs.log-level }}
       - run: ndk-pkg pack    android-${{ github.event.inputs.sdk-api-level }}/${{ github.event.inputs.target-abi }}/${{ github.event.inputs.package-name }} -o .
 
-      - uses: actions/upload-artifact@v3
-        with:
-          name: ${{ github.event.inputs.package-name }}-android${{ github.event.inputs.sdk-api-level }}-${{ github.event.inputs.target-abi }}
-          path: *.tar.xz
+        #- uses: actions/upload-artifact@v3
+        #with:
+        #  name: ${{ github.event.inputs.package-name }}-android${{ github.event.inputs.sdk-api-level }}-${{ github.event.inputs.target-abi }}
+        #  path: *.tar.xz
