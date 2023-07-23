@@ -13,21 +13,21 @@ on:
         description: choose the min sdk api level to be built with
         type: choice
         options:
-          - 21
-          - 22
-          - 23
-          - 24
-          - 25
-          - 26
-          - 27
-          - 28
-          - 29
-          - 30
-          - 31
-          - 32
-          - 33
+          - '21'
+          - '22'
+          - '23'
+          - '24'
+          - '25'
+          - '26'
+          - '27'
+          - '28'
+          - '29'
+          - '30'
+          - '31'
+          - '32'
+          - '33'
         required: true
-        default: 33
+        default: '33'
 
       target-abi:
         description: choose a target abi to be built for
@@ -65,9 +65,9 @@ on:
         type: choice
         options:
           - ''
-          - -q
-          - -v
-          - -vv
+          - '-q'
+          - '-v'
+          - '-vv'
 
 jobs:
   build:
