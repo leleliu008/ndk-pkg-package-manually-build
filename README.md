@@ -2,7 +2,9 @@
 
 manually build [ndk-pkg](https://github.com/leleliu008/ndk-pkg) packages via GitHub Actions.
 
-<img src="1.png" width="311px" style="border: 1px solid gray;" >
+||
+|-|
+|<img src="1.png" width="311px" >|
 
 ## how to use this project
 
