@@ -2,6 +2,8 @@
 
 manually build [ndk-pkg](https://github.com/leleliu008/ndk-pkg) packages via GitHub Actions.
 
+<img src="1.png" width="311px" style="border: 1px solid gray;" >
+
 ## how to use this project
 
 **step1: fork this repository into your own github account**
