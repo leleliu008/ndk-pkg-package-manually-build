@@ -95,32 +95,32 @@ jobs:
       - run: ndk-pkg sysinfo
       - run: ndk-pkg update
 
-      - if: github.event.inputs.target-abi-arm64-v8a == 'yes'
+      - if: github.event.inputs.target-abi-arm64-v8a == 'true'
         run: |
           ndk-pkg install android-${{ github.event.inputs.sdk-api-level }}/arm64-v8a/${{ github.event.inputs.package-name }} --build-type=${{ github.event.inputs.build-type }} --link-type=${{ github.event.inputs.link-type }} ${{ github.event.inputs.log-level }}
 
-      - if: github.event.inputs.target-abi-arm64-v8a == 'yes'
+      - if: github.event.inputs.target-abi-arm64-v8a == 'true'
         run: ndk-pkg pack android-${{ github.event.inputs.sdk-api-level }}/arm64-v8a/${{ github.event.inputs.package-name }} -t ${{ github.event.inputs.pack-type }} -o .
 
-      - if: github.event.inputs.target-abi-armeabi-v7a == 'yes'
+      - if: github.event.inputs.target-abi-armeabi-v7a == 'true'
         run: |
           ndk-pkg install android-${{ github.event.inputs.sdk-api-level }}/armeabi-v7a/${{ github.event.inputs.package-name }} --build-type=${{ github.event.inputs.build-type }} --link-type=${{ github.event.inputs.link-type }} ${{ github.event.inputs.log-level }}
 
-      - if: github.event.inputs.target-abi-armeabi-v7a == 'yes'
+      - if: github.event.inputs.target-abi-armeabi-v7a == 'true'
         run: ndk-pkg pack android-${{ github.event.inputs.sdk-api-level }}/armeabi-v7a/${{ github.event.inputs.package-name }} -t ${{ github.event.inputs.pack-type }} -o .
 
-      - if: github.event.inputs.target-abi-x86_64 == 'yes'
+      - if: github.event.inputs.target-abi-x86_64 == 'true'
         run: |
           ndk-pkg install android-${{ github.event.inputs.sdk-api-level }}/x86_64/${{ github.event.inputs.package-name }} --build-type=${{ github.event.inputs.build-type }} --link-type=${{ github.event.inputs.link-type }} ${{ github.event.inputs.log-level }}
 
-      - if: github.event.inputs.target-abi-x86_64 == 'yes'
+      - if: github.event.inputs.target-abi-x86_64 == 'true'
         run: ndk-pkg pack android-${{ github.event.inputs.sdk-api-level }}/x86_64/${{ github.event.inputs.package-name }} -t ${{ github.event.inputs.pack-type }} -o .
 
-      - if: github.event.inputs.target-abi-x86 == 'yes'
+      - if: github.event.inputs.target-abi-x86 == 'true'
         run: |
           ndk-pkg install android-${{ github.event.inputs.sdk-api-level }}/x86/${{ github.event.inputs.package-name }} --build-type=${{ github.event.inputs.build-type }} --link-type=${{ github.event.inputs.link-type }} ${{ github.event.inputs.log-level }}
 
-      - if: github.event.inputs.target-abi-x86 == 'yes'
+      - if: github.event.inputs.target-abi-x86 == 'true'
         run: ndk-pkg pack android-${{ github.event.inputs.sdk-api-level }}/x86/${{ github.event.inputs.package-name }} -t ${{ github.event.inputs.pack-type }} -o .
 
       - uses: actions/upload-artifact@v3
