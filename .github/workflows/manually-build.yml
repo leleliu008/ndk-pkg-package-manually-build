@@ -28,22 +28,22 @@ on:
           - '21'
 
       target-abi-arm64-v8a:
-        description: build for target abi : arm64-v8a
+        description: build for arm64-v8a
         type: boolean
         default: true
 
       target-abi-armeabi-v7a:
-        description: build for target abi : armeabi-v7a
+        description: build for armeabi-v7a
         type: boolean
         default: false
 
       target-abi-x86_64:
-        description: build for target abi : x86_64
+        description: build for x86_64
         type: boolean
         default: false
 
       target-abi-x86:
-        description: build for target abi : x86
+        description: build for x86
         type: boolean
         default: false
 
