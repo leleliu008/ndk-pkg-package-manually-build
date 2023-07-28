@@ -27,14 +27,25 @@ on:
           - '22'
           - '21'
 
-      target-abi:
-        description: choose a target abi to be built for
-        type: choice
-        options:
-          - arm64-v8a
-          - armeabi-v7a
-          - x86_64
-          - x86
+      target-abi-arm64-v8a:
+        description: build for target abi : arm64-v8a
+        type: boolean
+        default: true
+
+      target-abi-armeabi-v7a:
+        description: build for target abi : armeabi-v7a
+        type: boolean
+        default: false
+
+      target-abi-x86_64:
+        description: build for target abi : x86_64
+        type: boolean
+        default: false
+
+      target-abi-x86:
+        description: build for target abi : x86
+        type: boolean
+        default: false
 
       build-type:
         description: choose a build type
@@ -83,10 +94,36 @@ jobs:
       - run: ndk-pkg setup
       - run: ndk-pkg sysinfo
       - run: ndk-pkg update
-      - run: ndk-pkg install android-${{ github.event.inputs.sdk-api-level }}/${{ github.event.inputs.target-abi }}/${{ github.event.inputs.package-name }} --build-type=${{ github.event.inputs.build-type }} --link-type=${{ github.event.inputs.link-type }} ${{ github.event.inputs.log-level }}
-      - run: ndk-pkg pack    android-${{ github.event.inputs.sdk-api-level }}/${{ github.event.inputs.target-abi }}/${{ github.event.inputs.package-name }} -o . -t ${{ github.event.inputs.pack-type }}
+
+      - if: github.event.inputs.target-abi-arm64-v8a == 'yes'
+      - run: |
+          ndk-pkg install android-${{ github.event.inputs.sdk-api-level }}/arm64-v8a/${{ github.event.inputs.package-name }} --build-type=${{ github.event.inputs.build-type }} --link-type=${{ github.event.inputs.link-type }} ${{ github.event.inputs.log-level }}
+
+      - if: github.event.inputs.target-abi-arm64-v8a == 'yes'
+        run: ndk-pkg pack android-${{ github.event.inputs.sdk-api-level }}/arm64-v8a/${{ github.event.inputs.package-name }} -t ${{ github.event.inputs.pack-type }} -o .
+
+      - if: github.event.inputs.target-abi-armeabi-v7a == 'yes'
+      - run: |
+          ndk-pkg install android-${{ github.event.inputs.sdk-api-level }}/armeabi-v7a/${{ github.event.inputs.package-name }} --build-type=${{ github.event.inputs.build-type }} --link-type=${{ github.event.inputs.link-type }} ${{ github.event.inputs.log-level }}
+
+      - if: github.event.inputs.target-abi-armeabi-v7a == 'yes'
+        run: ndk-pkg pack android-${{ github.event.inputs.sdk-api-level }}/armeabi-v7a/${{ github.event.inputs.package-name }} -t ${{ github.event.inputs.pack-type }} -o .
+
+      - if: github.event.inputs.target-abi-x86_64 == 'yes'
+      - run: |
+          ndk-pkg install android-${{ github.event.inputs.sdk-api-level }}/x86_64/${{ github.event.inputs.package-name }} --build-type=${{ github.event.inputs.build-type }} --link-type=${{ github.event.inputs.link-type }} ${{ github.event.inputs.log-level }}
+
+      - if: github.event.inputs.target-abi-x86_64 == 'yes'
+        run: ndk-pkg pack android-${{ github.event.inputs.sdk-api-level }}/x86_64/${{ github.event.inputs.package-name }} -t ${{ github.event.inputs.pack-type }} -o .
+
+      - if: github.event.inputs.target-abi-x86 == 'yes'
+      - run: |
+          ndk-pkg install android-${{ github.event.inputs.sdk-api-level }}/x86/${{ github.event.inputs.package-name }} --build-type=${{ github.event.inputs.build-type }} --link-type=${{ github.event.inputs.link-type }} ${{ github.event.inputs.log-level }}
+
+      - if: github.event.inputs.target-abi-x86 == 'yes'
+        run: ndk-pkg pack android-${{ github.event.inputs.sdk-api-level }}/x86/${{ github.event.inputs.package-name }} -t ${{ github.event.inputs.pack-type }} -o .
 
       - uses: actions/upload-artifact@v3
         with:
-          name: ${{ github.event.inputs.package-name }}-android${{ github.event.inputs.sdk-api-level }}-${{ github.event.inputs.target-abi }}
+          name: ${{ github.event.inputs.package-name }}-android${{ github.event.inputs.sdk-api-level }}
           path: ${{ github.event.inputs.package-name }}-*.${{ github.event.inputs.pack-type }}
