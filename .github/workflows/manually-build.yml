@@ -52,6 +52,16 @@ on:
           - shared-only
           - shared-prefered
 
+      pack-type:
+        description: choose a pack type
+        type: choice
+        options:
+          - tar.xz
+          - tar.lz
+          - tar.gz
+          - tar.bz2
+          - zip
+
       log-level:
         description: choose a log-level
         type: choice
@@ -74,9 +84,9 @@ jobs:
       - run: ndk-pkg sysinfo
       - run: ndk-pkg update
       - run: ndk-pkg install android-${{ github.event.inputs.sdk-api-level }}/${{ github.event.inputs.target-abi }}/${{ github.event.inputs.package-name }} --build-type=${{ github.event.inputs.build-type }} --link-type=${{ github.event.inputs.link-type }} ${{ github.event.inputs.log-level }}
-      - run: ndk-pkg pack    android-${{ github.event.inputs.sdk-api-level }}/${{ github.event.inputs.target-abi }}/${{ github.event.inputs.package-name }} -o .
+      - run: ndk-pkg pack    android-${{ github.event.inputs.sdk-api-level }}/${{ github.event.inputs.target-abi }}/${{ github.event.inputs.package-name }} -o . -t ${{ github.event.inputs.pack-type }}
 
       - uses: actions/upload-artifact@v3
         with:
           name: ${{ github.event.inputs.package-name }}-android${{ github.event.inputs.sdk-api-level }}-${{ github.event.inputs.target-abi }}
-          path: ${{ github.event.inputs.package-name }}*.tar.xz
+          path: ${{ github.event.inputs.package-name }}-*.${{ github.event.inputs.pack-type }}
