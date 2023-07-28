@@ -122,4 +122,4 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: ${{ github.event.inputs.package-name }}-android${{ github.event.inputs.sdk-api-level }}
-          path: ${{ github.event.inputs.package-name }}-*.${{ github.event.inputs.pack-type }}
+          path: ${{ github.workspace }}/*.${{ github.event.inputs.pack-type }}
