@@ -67,8 +67,8 @@ on:
           - '-v'
           - '-vv'
 
-      export-prefab-aar:
-        description: export prefab aar
+      generate-maven-repo:
+        description: generate maven local repository
         type: boolean
         default: false
 
@@ -94,16 +94,22 @@ jobs:
               ndk-pkg pack "$item" -t ${{ github.event.inputs.pack-type }} -o .
           done
 
-      - if: ${{ github.event.inputs.export-prefab-aar == 'true' }}
-        name: export prefab aar
+      - if: ${{ github.event.inputs.generate-maven-repo == 'true' }}
+        name: generate maven local repository
         run: |
           set -ex
           for item in $(ndk-pkg ls-installed | sed 's|:[^:]*$||' | sort | uniq)
           do
-              ndk-pkg deploy "$item:${{ github.event.inputs.target-abis }}" --local=$PWD || true
+              PACKAGE_SPEC="${item%%,*}"
+
+              if [ -d "$HOME/.ndk-pkg/installed/$PACKAGE_SPEC/include" ] ; then
+                  ndk-pkg deploy "$item:${{ github.event.inputs.target-abis }}" --local=.
+              else
+                  echo "no dev files."
+              fi
           done
 
       - uses: actions/upload-artifact@v3
         with:
-          name: ${{ github.event.inputs.package-name }}-android-${{ github.event.inputs.target-api }}
+          name: ${{ github.event.inputs.package-name }}-android${{ github.event.inputs.target-api }}
           path: ${{ github.workspace }}/*
