@@ -104,7 +104,7 @@ jobs:
 
           GROUPID='${{ github.event.inputs.maven-group-id }}'
 
-          [ -z "$GROUPID" ] && GROUPID='com.fpliu.ndk.pkg.prefab.android.${{ github.event.inputs.log-level }}'
+          [ -z "$GROUPID" ] && GROUPID='com.fpliu.ndk.pkg.prefab.android.${{ github.event.inputs.target-api }}'
 
           for item in $(ndk-pkg ls-installed | sed 's|:[^:]*$||' | sort | uniq)
           do
