@@ -73,7 +73,7 @@ on:
         default: false
 
       maven-group-id:
-        description: input the maven group id you want to use, default is com.fpliu.ndk.pkg.prefab.android.<API>
+        description: input the maven group id, default is com.fpliu.ndk.pkg.prefab.android.<API>
 
 jobs:
   build:
@@ -102,7 +102,7 @@ jobs:
         run: |
           set -ex
 
-          GROUPID="${${ github.event.inputs.maven-group-id }}"
+          GROUPID='${{ github.event.inputs.maven-group-id }}'
 
           [ -z "$GROUPID" ] && GROUPID='com.fpliu.ndk.pkg.prefab.android.${{ github.event.inputs.log-level }}'
 
