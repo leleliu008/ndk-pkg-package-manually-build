@@ -72,11 +72,6 @@ on:
         type: boolean
         default: false
 
-      generate-pom-xml:
-        description: generate pom.xml
-        type: boolean
-        default: false
-
 jobs:
   build:
 
@@ -99,7 +94,7 @@ jobs:
               ndk-pkg pack "$item" -t ${{ github.event.inputs.pack-type }} -o .
           done
 
-      - if: ${{ github.event.inputs.export-prefab-aar == 'yes' }}
+      - if: ${{ github.event.inputs.export-prefab-aar == 'true' }}
         name: export prefab aar
         run: |
           set -ex
