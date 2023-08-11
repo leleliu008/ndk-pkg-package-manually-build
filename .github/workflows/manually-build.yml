@@ -98,9 +98,6 @@ jobs:
         name: export prefab aar
         run: |
           set -ex
-
-          apt install -y maven
-
           for item in $(ndk-pkg ls-installed | sed 's|:[^:]*$||' | sort | uniq)
           do
               ndk-pkg deploy "$item:${{ github.event.inputs.target-abis }}" --local=$PWD || true
