@@ -100,10 +100,12 @@ jobs:
           set -ex
           for item in $(ndk-pkg ls-installed | sed 's|:[^:]*$||' | sort | uniq)
           do
-              PACKAGE_SPEC="${item%%,*}"
+              PACKAGE_SPEC="$item:${{ github.event.inputs.target-abis }}"
 
-              if [ -d "$HOME/.ndk-pkg/installed/$PACKAGE_SPEC/include" ] ; then
-                  ndk-pkg deploy "$item:${{ github.event.inputs.target-abis }}" --local=.
+              PACKAGE_XXXX="${item%%,*}"
+
+              if [ -d "$HOME/.ndk-pkg/installed/$PACKAGE_XXXX/include" ] ; then
+                  ndk-pkg deploy "$PACKAGE_SPEC" --local=.
               else
                   echo "no dev files."
               fi
