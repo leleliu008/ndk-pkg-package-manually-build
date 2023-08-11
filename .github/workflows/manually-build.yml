@@ -102,7 +102,7 @@ jobs:
           do
               PACKAGE_SPEC="$item:${{ github.event.inputs.target-abis }}"
 
-              PACKAGE_XXXX="${item%%,*}"
+              PACKAGE_XXXX="${PACKAGE_SPEC%%,*}"
 
               if [ -d "$HOME/.ndk-pkg/installed/$PACKAGE_XXXX/include" ] ; then
                   ndk-pkg deploy "$PACKAGE_SPEC" --local=.
