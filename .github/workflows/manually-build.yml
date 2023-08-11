@@ -72,6 +72,9 @@ on:
         type: boolean
         default: false
 
+      maven-group-id:
+        description: input the maven group id you want to use, default is com.fpliu.ndk.pkg.prefab.android.<API>
+
 jobs:
   build:
 
@@ -98,6 +101,11 @@ jobs:
         name: generate maven local repository
         run: |
           set -ex
+
+          GROUPID="${${ github.event.inputs.maven-group-id }}"
+
+          [ -z "$GROUPID" ] && GROUPID='com.fpliu.ndk.pkg.prefab.android.${{ github.event.inputs.log-level }}'
+
           for item in $(ndk-pkg ls-installed | sed 's|:[^:]*$||' | sort | uniq)
           do
               PACKAGE_SPEC="$item:${{ github.event.inputs.target-abis }}"
@@ -105,7 +113,7 @@ jobs:
               PACKAGE_XXXX="${PACKAGE_SPEC%%,*}"
 
               if [ -d "$HOME/.ndk-pkg/installed/$PACKAGE_XXXX/include" ] ; then
-                  ndk-pkg deploy "$PACKAGE_SPEC" --local=.
+                  ndk-pkg deploy "$PACKAGE_SPEC" --local=. --groupId="$GROUPID"
               else
                   echo "no dev files."
               fi
