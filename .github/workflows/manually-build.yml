@@ -105,5 +105,5 @@ jobs:
 
       - uses: actions/upload-artifact@v3
         with:
-          name: ${{ github.event.inputs.package-name }}:android-${{ github.event.inputs.target-api }}
+          name: ${{ github.event.inputs.package-name }}-android-${{ github.event.inputs.target-api }}
           path: ${{ github.workspace }}/*
