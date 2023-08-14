@@ -43,10 +43,10 @@ on:
         description: choose a link type
         type: choice
         options:
-          - static-only
           - static-prefered
-          - shared-only
+          - static-only
           - shared-prefered
+          - shared-only
 
       pack-type:
         description: choose a pack type
