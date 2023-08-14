@@ -68,12 +68,12 @@ on:
           - '-vv'
 
       generate-maven-repo:
-        description: generate maven local repository
+        description: generate maven local repository bundle
         type: boolean
         default: false
 
       maven-group-id:
-        description: input the maven group id, default is com.fpliu.ndk.pkg.prefab.android.<API>
+        description: input the maven groupId, default is com.fpliu.ndk.pkg.prefab.android.<API>
 
 jobs:
   build:
