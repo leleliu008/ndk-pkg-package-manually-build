@@ -113,13 +113,19 @@ jobs:
               PACKAGE_XXXX="${PACKAGE_SPEC%%,*}"
 
               if [ -d "$HOME/.ndk-pkg/installed/$PACKAGE_XXXX/include" ] ; then
-                  ndk-pkg deploy "$PACKAGE_SPEC" --local=. --groupId="$GROUPID"
+                  ndk-pkg deploy "$PACKAGE_SPEC" --local=maven-local-repository-bundle --groupId="$GROUPID"
               else
                   echo "no dev files."
               fi
           done
 
+      - run: tar cJvf maven-local-repository-bundle.tar.xz maven-local-repository-bundle
+
+      - run: ls
+
+      - run: du -sh *.tar.xz
+
       - uses: actions/upload-artifact@v3
         with:
           name: ${{ github.event.inputs.package-name }}-android${{ github.event.inputs.target-api }}
-          path: ${{ github.workspace }}/*
+          path: ${{ github.workspace }}/*.tar.xz
