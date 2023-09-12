@@ -83,6 +83,7 @@ jobs:
     container: fpliu/ndk-pkg
 
     steps:
+      - run: df -h
       - run: ndk-pkg env
       - run: ndk-pkg setup
       - run: ndk-pkg sysinfo
