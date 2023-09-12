@@ -119,7 +119,9 @@ jobs:
               fi
           done
 
-      - run: tar cJvf maven-local-repository-bundle.tar.xz maven-local-repository-bundle
+          if [ -d maven-local-repository-bundle ] ; then
+              tar cJvf maven-local-repository-bundle.tar.xz maven-local-repository-bundle
+          fi
 
       - run: ls
 
