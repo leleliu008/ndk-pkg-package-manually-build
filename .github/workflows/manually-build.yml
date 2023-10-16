@@ -103,6 +103,8 @@ jobs:
         run: |
           set -ex
 
+          export NDKPKG_XTRACE=1
+
           GROUPID='${{ github.event.inputs.maven-group-id }}'
 
           [ -z "$GROUPID" ] && GROUPID='com.fpliu.ndk.pkg.prefab.android.${{ github.event.inputs.target-api }}'
