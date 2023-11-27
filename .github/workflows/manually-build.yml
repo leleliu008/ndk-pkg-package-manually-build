@@ -26,11 +26,13 @@ on:
           - '23'
           - '22'
           - '21'
+        default: '27'
 
       target-abis:
         description: input android abis to be built for
         required: true
-        default: arm64-v8a,armeabi-v7a,x86_64,x86
+        # default: arm64-v8a,armeabi-v7a,x86_64,x86
+        default: armeabi-v7a
 
       build-type:
         description: choose a build type
@@ -38,6 +40,7 @@ on:
         options:
           - release
           - debug
+        default: release
 
       link-type:
         description: choose a link type
@@ -47,6 +50,7 @@ on:
           - static-only
           - shared-prefered
           - shared-only
+        default: static-prefered
 
       pack-type:
         description: choose a pack type
