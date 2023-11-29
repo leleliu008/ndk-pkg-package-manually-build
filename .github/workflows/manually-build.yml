@@ -90,6 +90,7 @@ jobs:
       - run: df -h
       - run: ndk-pkg env
       - run: ndk-pkg setup
+      - run: ndk-pkg formula-repo-add my_repo https://github.com/YSaxon/ndk-pkg-formula-repository-offical-core
       - run: ndk-pkg sysinfo
       - run: ndk-pkg update
       - run: ndk-pkg install ${{ github.event.inputs.package-name }}:android-${{ github.event.inputs.target-api }}:${{ github.event.inputs.target-abis }} --build-type=${{ github.event.inputs.build-type }} --link-type=${{ github.event.inputs.link-type }} ${{ github.event.inputs.log-level }}
