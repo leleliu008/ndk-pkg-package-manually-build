@@ -131,7 +131,7 @@ jobs:
 
       - run: du -sh *.tar.xz
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: ${{ github.event.inputs.package-name }}-android${{ github.event.inputs.target-api }}-${{ github.event.inputs.target-abis }}
           path: ${{ github.workspace }}/*.tar.xz
