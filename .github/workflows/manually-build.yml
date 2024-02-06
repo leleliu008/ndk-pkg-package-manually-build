@@ -13,6 +13,7 @@ on:
         description: choose the min sdk api level to be built with
         type: choice
         options:
+          - '34'
           - '33'
           - '32'
           - '31'
@@ -43,9 +44,9 @@ on:
         description: choose a link type
         type: choice
         options:
-          - static-prefered
+          - static-most
           - static-only
-          - shared-prefered
+          - shared-most
           - shared-only
 
       pack-type:
@@ -88,7 +89,7 @@ jobs:
       - run: ndk-pkg setup
       - run: ndk-pkg sysinfo
       - run: ndk-pkg update
-      - run: ndk-pkg install ${{ github.event.inputs.package-name }}:android-${{ github.event.inputs.target-api }}:${{ github.event.inputs.target-abis }} --build-type=${{ github.event.inputs.build-type }} --link-type=${{ github.event.inputs.link-type }} ${{ github.event.inputs.log-level }}
+      - run: ndk-pkg install android-${{ github.event.inputs.target-api }}-${{ github.event.inputs.target-abis }}/${{ github.event.inputs.package-name }} --build-type=${{ github.event.inputs.build-type }} --link-type=${{ github.event.inputs.link-type }} ${{ github.event.inputs.log-level }}
 
       - name: pack
         run: |
@@ -109,14 +110,14 @@ jobs:
 
           [ -z "$GROUPID" ] && GROUPID='com.fpliu.ndk.pkg.prefab.android.${{ github.event.inputs.target-api }}'
 
+          ABIS="${{ github.event.inputs.target-abis }}"
+
+          ABI="${ABIS%%,*}"
+
           for item in $(ndk-pkg ls-installed | sed 's|:[^:]*$||' | sort | uniq)
           do
-              PACKAGE_SPEC="$item:${{ github.event.inputs.target-abis }}"
-
-              PACKAGE_XXXX="${PACKAGE_SPEC%%,*}"
-
-              if [ -d "$HOME/.ndk-pkg/installed/$PACKAGE_XXXX/include" ] ; then
-                  ndk-pkg deploy "$PACKAGE_SPEC" --local=maven-local-repository-bundle --groupId="$GROUPID"
+              if [ -d "$HOME/.ndk-pkg/installed/android-${{ github.event.inputs.target-api }}-$ABI/$item/include" ] ; then
+                  ndk-pkg deploy android-${{ github.event.inputs.target-api }}-${{ github.event.inputs.target-abis }}/$item --local=maven-local-repository-bundle --groupId="$GROUPID"
               else
                   echo "no dev files."
               fi
@@ -132,5 +133,5 @@ jobs:
 
       - uses: actions/upload-artifact@v3
         with:
-          name: ${{ github.event.inputs.package-name }}-android${{ github.event.inputs.target-api }}
+          name: ${{ github.event.inputs.package-name }}-android${{ github.event.inputs.target-api }}-${{ github.event.inputs.target-abis }}
           path: ${{ github.workspace }}/*.tar.xz
