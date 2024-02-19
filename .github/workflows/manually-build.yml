@@ -114,10 +114,10 @@ jobs:
 
           ABI="${ABIS%%,*}"
 
-          for item in $(ndk-pkg ls-installed | sed 's|:[^:]*$||' | sort | uniq)
+          for PKGNAME in $(ndk-pkg ls-installed | cut -d/ -f2 | sort | uniq)
           do
-              if [ -d "$HOME/.ndk-pkg/installed/android-${{ github.event.inputs.target-api }}-$ABI/$item/include" ] ; then
-                  ndk-pkg deploy android-${{ github.event.inputs.target-api }}-${{ github.event.inputs.target-abis }}/$item --local=maven-local-repository-bundle --groupId="$GROUPID"
+              if [ -d "$HOME/.ndk-pkg/installed/android-${{ github.event.inputs.target-api }}-$ABI/$PKGNAME/include" ] ; then
+                  ndk-pkg deploy android-${{ github.event.inputs.target-api }}-${{ github.event.inputs.target-abis }}/$PKGNAME --local=maven-local-repository-bundle --groupId="$GROUPID"
               else
                   echo "no dev files."
               fi
