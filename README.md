@@ -1,13 +1,13 @@
 # ndk-pkg-package-manually-build
 
-manually build [ndk-pkg](https://github.com/leleliu008/ndk-pkg) packages via GitHub Actions.
+manually build Android NDK packages using [ndk-pkg](https://github.com/leleliu008/ndk-pkg) via GitHub Actions.
 
 This is the recommended way of using [ndk-pkg](https://github.com/leleliu008/ndk-pkg).
 
 In this way, you don't need to care about other things than:
 
-- what package would you like to build?
-- which minimum Android SDK API level would you like support?
+- what package would you like to build? [lookup package names](https://github.com/leleliu008/ndk-pkg-formula-repository-official-core/tree/master/formula)
+- which minimum Android SDK API level would you like to support?
 - which Android ABI would you like to build for?
 - which build type would you like to use?
 - which link type would you like to use?
