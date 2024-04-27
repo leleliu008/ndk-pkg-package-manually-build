@@ -40,14 +40,13 @@ on:
           - release
           - debug
 
-      link-type:
-        description: choose a link type
+      exe-type:
+        description: choose a link type for executables
         type: choice
         options:
-          - static-most
-          - static-only
-          - shared-most
-          - shared-only
+          - pie
+          - msle
+          - fsle
 
       pack-type:
         description: choose a pack type
@@ -89,7 +88,7 @@ jobs:
       - run: ndk-pkg setup
       - run: ndk-pkg sysinfo
       - run: ndk-pkg update
-      - run: ndk-pkg install android-${{ github.event.inputs.target-api }}-${{ github.event.inputs.target-abis }}/${{ github.event.inputs.package-name }} --build-type=${{ github.event.inputs.build-type }} --link-type=${{ github.event.inputs.link-type }} ${{ github.event.inputs.log-level }}
+      - run: ndk-pkg install android-${{ github.event.inputs.target-api }}-${{ github.event.inputs.target-abis }}/${{ github.event.inputs.package-name }} --profile=${{ github.event.inputs.build-type }} --exe=${{ github.event.inputs.exe-type }} ${{ github.event.inputs.log-level }}
 
       - name: pack
         run: |
