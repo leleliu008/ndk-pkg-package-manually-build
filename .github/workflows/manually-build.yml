@@ -34,7 +34,7 @@ on:
         default: arm64-v8a,armeabi-v7a,x86_64,x86
 
       build-type:
-        description: choose a build type
+        description: choose a build profile
         type: choice
         options:
           - release
@@ -60,12 +60,12 @@ on:
           - '-vv'
 
       fsle:
-        description: whether to create fully statically linked executables
+        description: create fully statically linked executables
         type: boolean
         default: false
 
       generate-maven-repo:
-        description: whether to generate maven local repository bundle
+        description: generate maven local repository bundle
         type: boolean
         default: false
 
