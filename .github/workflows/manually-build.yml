@@ -36,13 +36,12 @@ on:
         default: armeabi-v7a
 
       build-type:
-        description: choose a build type
+        description: choose a build profile
         type: choice
         options:
           - release
           - debug
         default: release
-
       link-type:
         description: choose a link type
         type: choice
@@ -52,7 +51,6 @@ on:
           - shared-most
           - shared-only
         default: static-prefered
-
       pack-type:
         description: choose a pack type
         type: choice
@@ -71,6 +69,11 @@ on:
           - '-q'
           - '-v'
           - '-vv'
+
+      fsle:
+        description: create fully statically linked executables
+        type: boolean
+        default: false
 
       generate-maven-repo:
         description: generate maven local repository bundle
@@ -94,7 +97,12 @@ jobs:
       - run: ndk-pkg formula-repo-add my_repo https://github.com/YSaxon/ndk-pkg-formula-repository-offical-core
       - run: ndk-pkg sysinfo
       - run: ndk-pkg update
-      - run: ndk-pkg install android-${{ github.event.inputs.target-api }}-${{ github.event.inputs.target-abis }}/${{ github.event.inputs.package-name }} --build-type=${{ github.event.inputs.build-type }} --link-type=${{ github.event.inputs.link-type }} ${{ github.event.inputs.log-level }}
+
+      - if: ${{ github.event.inputs.fsle == 'true' }}
+        run: ndk-pkg install android-${{ github.event.inputs.target-api }}-${{ github.event.inputs.target-abis }}/${{ github.event.inputs.package-name }} --profile=${{ github.event.inputs.build-type }} ${{ github.event.inputs.log-level }} --fsle
+
+      - if: ${{ github.event.inputs.fsle == 'false' }}
+        run: ndk-pkg install android-${{ github.event.inputs.target-api }}-${{ github.event.inputs.target-abis }}/${{ github.event.inputs.package-name }} --profile=${{ github.event.inputs.build-type }} ${{ github.event.inputs.log-level }}
 
       - name: pack
         run: |
