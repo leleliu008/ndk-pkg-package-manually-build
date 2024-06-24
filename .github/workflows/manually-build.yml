@@ -81,7 +81,7 @@ jobs:
 
     steps:
       - run: df -h
-      - run: ndk-pkg env
+      - run: ndk-pkg about
       - run: ndk-pkg setup
       - run: ndk-pkg sysinfo
       - run: ndk-pkg update
