@@ -77,27 +77,32 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    container: fpliu/ndk-pkg
+    container: ubuntu:24.04
 
     steps:
-      - run: df -h
-      - run: ndk-pkg about
-      - run: ndk-pkg setup
-      - run: ndk-pkg sysinfo
-      - run: ndk-pkg update
+      - run: apt -y update
+      - run: apt -y install curl
+
+      - run: curl -LO https://raw.githubusercontent.com/leleliu008/ndk-pkg/master/ndk-pkg
+      - run: chmod +x ndk-pkg
+
+      - run: ./ndk-pkg about
+      - run: ./ndk-pkg setup
+      - run: ./ndk-pkg sysinfo
+      - run: ./ndk-pkg update
 
       - if: ${{ github.event.inputs.static == 'true' }}
-        run: ndk-pkg install android-${{ github.event.inputs.target-api }}-${{ github.event.inputs.target-abis }}/${{ github.event.inputs.package-name }} --profile=${{ github.event.inputs.build-type }} ${{ github.event.inputs.log-level }} --static
+        run: ./ndk-pkg install android-${{ github.event.inputs.target-api }}-${{ github.event.inputs.target-abis }}/${{ github.event.inputs.package-name }} --profile=${{ github.event.inputs.build-type }} ${{ github.event.inputs.log-level }} --static
 
       - if: ${{ github.event.inputs.static == 'false' }}
-        run: ndk-pkg install android-${{ github.event.inputs.target-api }}-${{ github.event.inputs.target-abis }}/${{ github.event.inputs.package-name }} --profile=${{ github.event.inputs.build-type }} ${{ github.event.inputs.log-level }}
+        run: ./ndk-pkg install android-${{ github.event.inputs.target-api }}-${{ github.event.inputs.target-abis }}/${{ github.event.inputs.package-name }} --profile=${{ github.event.inputs.build-type }} ${{ github.event.inputs.log-level }}
 
       - name: pack
         run: |
           set -ex
-          for item in $(ndk-pkg ls-installed)
+          for item in $(./ndk-pkg ls-installed)
           do
-              ndk-pkg pack "$item" -t ${{ github.event.inputs.pack-type }} -o .
+              ./ndk-pkg pack "$item" -t ${{ github.event.inputs.pack-type }}
           done
 
       - if: ${{ github.event.inputs.generate-maven-repo == 'true' }}
@@ -115,10 +120,10 @@ jobs:
 
           ABI="${ABIS%%,*}"
 
-          for PKGNAME in $(ndk-pkg ls-installed | cut -d/ -f2 | sort | uniq)
+          for PKGNAME in $(./ndk-pkg ls-installed | cut -d/ -f2 | sort | uniq)
           do
               if [ -d "$HOME/.ndk-pkg/installed/android-${{ github.event.inputs.target-api }}-$ABI/$PKGNAME/include" ] ; then
-                  ndk-pkg deploy android-${{ github.event.inputs.target-api }}-${{ github.event.inputs.target-abis }}/$PKGNAME --local=maven-local-repository-bundle --groupId="$GROUPID"
+                  ./ndk-pkg deploy android-${{ github.event.inputs.target-api }}-${{ github.event.inputs.target-abis }}/$PKGNAME --local=maven-local-repository-bundle --groupId="$GROUPID"
               else
                   echo "no dev files."
               fi
