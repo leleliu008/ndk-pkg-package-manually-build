@@ -131,8 +131,7 @@ jobs:
           done
 
           if [ -d maven-local-repository-bundle ] ; then
-              export PATH="$HOME/.ndk-pkg/uppm/installed/xz/bin:$PATH"
-              tar cJvf maven-local-repository-bundle.tar.xz maven-local-repository-bundle
+              ~/.ndk-pkg/uppm/installed/bsdtar/bin/bsdtar cvaf maven-local-repository-bundle.tar.xz maven-local-repository-bundle
           fi
 
       - run: ls
