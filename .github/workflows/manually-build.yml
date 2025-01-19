@@ -7,7 +7,7 @@ on:
       package-name:
         description: input the package name to be built
         required: true
-        default: zlib
+        default: libz
 
       target-api:
         description: choose the min sdk api level to be built with
@@ -34,22 +34,22 @@ on:
         required: true
         default: arm64-v8a,armeabi-v7a,x86_64,x86
 
-      build-type:
+      profile:
         description: choose a build profile
         type: choice
         options:
           - release
           - debug
 
-      pack-type:
-        description: choose a pack type
+      bundle-type:
+        description: choose a bundle type
         type: choice
         options:
-          - tar.xz
-          - tar.lz
-          - tar.gz
-          - tar.bz2
-          - zip
+          - .tar.xz
+          - .tar.lz
+          - .tar.gz
+          - .tar.bz2
+          - .zip
 
       log-level:
         description: choose a log-level
@@ -62,8 +62,10 @@ on:
 
       static:
         description: create fully statically linked executables
-        type: boolean
-        default: false
+        type: choice
+        options:
+          - ''
+          - '--static'
 
       generate-maven-repo:
         description: generate maven local repository bundle
@@ -91,20 +93,28 @@ jobs:
       - run: ./ndk-pkg setup
       - run: ./ndk-pkg sysinfo
       - run: ./ndk-pkg update
-
-      - if: ${{ github.event.inputs.static == 'true' }}
-        run: ./ndk-pkg install android-${{ github.event.inputs.target-api }}-${{ github.event.inputs.target-abis }}/${{ github.event.inputs.package-name }} --profile=${{ github.event.inputs.build-type }} ${{ github.event.inputs.log-level }} --static
-
-      - if: ${{ github.event.inputs.static == 'false' }}
-        run: ./ndk-pkg install android-${{ github.event.inputs.target-api }}-${{ github.event.inputs.target-abis }}/${{ github.event.inputs.package-name }} --profile=${{ github.event.inputs.build-type }} ${{ github.event.inputs.log-level }}
+      - run: ./ndk-pkg install android-${{ github.event.inputs.target-api }}-${{ github.event.inputs.target-abis }}/${{ github.event.inputs.package-name }} --profile=${{ github.event.inputs.profile }} ${{ github.event.inputs.static }} ${{ github.event.inputs.log-level }}
 
       - name: pack
         run: |
           set -ex
           for item in $(./ndk-pkg ls-installed)
           do
-              ./ndk-pkg pack "$item" -t ${{ github.event.inputs.pack-type }}
+              ./ndk-pkg bundle "$item" ${{ github.event.inputs.bundle-type }}
           done
+
+      - run: ls
+
+      - run: du -sh *${{ github.event.inputs.bundle-type }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ github.event.inputs.package-name }}---android-${{ github.event.inputs.target-api }}-${{ github.event.inputs.target-abis }}.${{ github.event.inputs.profile }}${{ github.event.inputs.bundle-type }}
+          path: ./*${{ github.event.inputs.bundle-type }}
+
+
+
+
 
       - if: ${{ github.event.inputs.generate-maven-repo == 'true' }}
         name: generate maven local repository
@@ -134,11 +144,8 @@ jobs:
               ~/.ndk-pkg/uppm/installed/bsdtar/bin/bsdtar cvaf maven-local-repository-bundle.tar.xz maven-local-repository-bundle
           fi
 
-      - run: ls
-
-      - run: du -sh *.tar.xz
-
-      - uses: actions/upload-artifact@v4
+      - if: ${{ github.event.inputs.generate-maven-repo == 'true' }}
+        uses: actions/upload-artifact@v4
         with:
-          name: ${{ github.event.inputs.package-name }}-android${{ github.event.inputs.target-api }}-${{ github.event.inputs.target-abis }}
-          path: ${{ github.workspace }}/*.tar.xz
+          name: ${{ github.event.inputs.package-name }}---android-${{ github.event.inputs.target-api }}-${{ github.event.inputs.target-abis }}-maven-local-repository-bundle.tar.xz
+          path: maven-local-repository-bundle.tar.xz
