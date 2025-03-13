@@ -83,6 +83,8 @@ jobs:
     container: ubuntu:24.04
 
     steps:
+      - run: export -p
+
       - run: apt -y update
       - run: apt -y install curl
 
@@ -111,8 +113,6 @@ jobs:
         with:
           name: ${{ github.event.inputs.package-name }}---android-${{ github.event.inputs.target-api }}-${{ github.event.inputs.target-abis }}.${{ github.event.inputs.profile }}${{ github.event.inputs.bundle-type }}
           path: ./*${{ github.event.inputs.bundle-type }}
-
-
 
 
 
