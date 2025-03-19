@@ -83,6 +83,7 @@ jobs:
     container: ubuntu:24.04
 
     steps:
+      - run: df -h
       - run: export -p
 
       - run: apt -y update
