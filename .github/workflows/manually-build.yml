@@ -89,10 +89,10 @@ jobs:
           fi
 
           case ${{ github.event.inputs.log-level }} in
-            normal)         LOG_LEVEL=''    ;;
-            quiet)          LOG_LEVEL='-q'  ;;
-            verbose)        LOG_LEVEL='-v'  ;;
-            'very verbose') LOG_LEVEL='-vv' ;;
+            normal)         LOG_LEVEL=''   ;;
+            quiet)          LOG_LEVEL='-q' ;;
+            verbose)        LOG_LEVEL='-v' ;;
+            'very verbose') LOG_LEVEL='-x' ;;
           esac
 
           INSTALL_ARGS="$FSLE $LOG_LEVEL"
