@@ -55,17 +55,15 @@ on:
         description: choose a log-level
         type: choice
         options:
-          - ''
-          - '-q'
-          - '-v'
-          - '-vv'
+          - 'normal'
+          - 'quiet'
+          - 'verbose'
+          - 'very verbose'
 
       static:
         description: create fully statically linked executables
-        type: choice
-        options:
-          - ''
-          - '--static'
+        type: boolean
+        default: false
 
       generate-maven-repo:
         description: generate maven local repository bundle
@@ -76,7 +74,38 @@ on:
         description: input the maven groupId, default is com.fpliu.ndk.pkg.prefab.android.<API>
 
 jobs:
+
+  base:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - id:  prepare
+        run: |
+          if [ ${{ github.event.inputs.static }} = true ] ; then
+            FSLE=--static
+          else
+            FSLE=
+          fi
+
+          case ${{ github.event.inputs.static }} in
+            normal)         LOG_LEVEL=''    ;;
+            quiet)          LOG_LEVEL='-q'  ;;
+            verbose)        LOG_LEVEL='-v'  ;;
+            'very verbose') LOG_LEVEL='-vv' ;;
+          esac
+
+          INSTALL_ARGS="$FSLE $LOG_LEVEL"
+
+          printf 'INSTALL_ARGS=%s\n' "$INSTALL_ARGS" >> "$GITHUB_OUTPUT"
+
+    outputs:
+      install-args: ${{ steps.prepare.outputs.INSTALL_ARGS }}
+
+
+
   build:
+    needs: base
 
     runs-on: ubuntu-latest
 
@@ -96,7 +125,7 @@ jobs:
       - run: ./ndk-pkg setup
       - run: ./ndk-pkg sysinfo
       - run: ./ndk-pkg update
-      - run: ./ndk-pkg install android-${{ github.event.inputs.target-api }}-${{ github.event.inputs.target-abis }}/${{ github.event.inputs.package-name }} --profile=${{ github.event.inputs.profile }} ${{ github.event.inputs.static }} ${{ github.event.inputs.log-level }}
+      - run: ./ndk-pkg install android-${{ github.event.inputs.target-api }}-${{ github.event.inputs.target-abis }}/${{ github.event.inputs.package-name }} --profile=${{ github.event.inputs.profile }} ${{ needs.base.outputs.install-args }}
 
       - name: pack
         run: |
