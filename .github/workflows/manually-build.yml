@@ -58,7 +58,7 @@ on:
           - 'normal'
           - 'quiet'
           - 'verbose'
-          - 'very verbose'
+          - 'very-verbose'
 
       static:
         description: create fully statically linked executables
@@ -92,7 +92,7 @@ jobs:
             normal)         LOG_LEVEL=''   ;;
             quiet)          LOG_LEVEL='-q' ;;
             verbose)        LOG_LEVEL='-v' ;;
-            'very verbose') LOG_LEVEL='-x' ;;
+            'very-verbose') LOG_LEVEL='-x' ;;
           esac
 
           INSTALL_ARGS="$FSLE $LOG_LEVEL"
