@@ -34,6 +34,13 @@ on:
         required: true
         default: arm64-v8a,armeabi-v7a,x86_64,x86
 
+      pagesize:
+        description: choose the pagesize to be built for
+        type: choice
+        options:
+          - 16KB
+          - 4KB
+
       profile:
         description: choose a build profile
         type: choice
@@ -88,6 +95,12 @@ jobs:
             FSLE=
           fi
 
+          if [ ${{ github.event.inputs.pagesize }} = '16KB' ] ; then
+            NDK_REVISION='28c'
+          else
+            NDK_REVISION='27d'
+          fi
+
           case ${{ github.event.inputs.log-level }} in
             normal)         LOG_LEVEL=''   ;;
             quiet)          LOG_LEVEL='-q' ;;
@@ -95,7 +108,7 @@ jobs:
             'very-verbose') LOG_LEVEL='-x' ;;
           esac
 
-          INSTALL_ARGS="$FSLE $LOG_LEVEL"
+          INSTALL_ARGS="$FSLE $LOG_LEVEL --ndk-revision=$NDK_REVISION"
 
           printf 'INSTALL_ARGS=%s\n' "$INSTALL_ARGS" >> "$GITHUB_OUTPUT"
 
