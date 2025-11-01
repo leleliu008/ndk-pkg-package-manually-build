@@ -9,6 +9,11 @@ on:
         required: true
         default: libz
 
+      target-abis:
+        description: input the ABIs to be built for
+        required: true
+        default: arm64-v8a,armeabi-v7a,x86_64,x86
+
       target-api:
         description: choose the min sdk api level to be built with
         type: choice
@@ -29,11 +34,6 @@ on:
           - '22'
           - '21'
 
-      target-abis:
-        description: input android abis to be built for
-        required: true
-        default: arm64-v8a,armeabi-v7a,x86_64,x86
-
       pagesize:
         description: choose the pagesize to be built for
         type: choice
@@ -42,14 +42,14 @@ on:
           - 4KB
 
       profile:
-        description: choose a build profile
+        description: choose the build profile
         type: choice
         options:
           - release
           - debug
 
       bundle-type:
-        description: choose a bundle type
+        description: choose the bundle type
         type: choice
         options:
           - .tar.xz
@@ -59,7 +59,7 @@ on:
           - .zip
 
       log-level:
-        description: choose a log-level
+        description: choose the log level
         type: choice
         options:
           - 'normal'
