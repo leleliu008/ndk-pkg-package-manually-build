@@ -152,7 +152,7 @@ jobs:
 
       - run: du -sh *${{ github.event.inputs.bundle-type }}
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: ${{ github.event.inputs.package-name }}---android-${{ github.event.inputs.target-api }}-${{ github.event.inputs.target-abis }}.${{ github.event.inputs.profile }}${{ github.event.inputs.bundle-type }}
           path: ./*${{ github.event.inputs.bundle-type }}
@@ -188,7 +188,7 @@ jobs:
           fi
 
       - if: ${{ github.event.inputs.generate-maven-repo == 'true' }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: ${{ github.event.inputs.package-name }}---android-${{ github.event.inputs.target-api }}-${{ github.event.inputs.target-abis }}-maven-local-repository-bundle.tar.xz
           path: maven-local-repository-bundle.tar.xz
