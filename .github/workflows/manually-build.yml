@@ -4,6 +4,15 @@ on:
   workflow_dispatch:
     inputs:
 
+      ndk-revision:
+        description: ndk revision to be used
+        type: choice
+        options:
+          - '30'
+          - '29'
+          - '28c'
+          - '27d'
+
       package-name:
         description: input the package name to be built
         required: true
@@ -18,6 +27,8 @@ on:
         description: choose the min sdk api level to be built with
         type: choice
         options:
+          - '37'
+          - '36'
           - '35'
           - '34'
           - '33'
@@ -33,13 +44,6 @@ on:
           - '23'
           - '22'
           - '21'
-
-      pagesize:
-        description: choose the pagesize to be built for
-        type: choice
-        options:
-          - 16KB
-          - 4KB
 
       profile:
         description: choose the build profile
@@ -82,43 +86,7 @@ on:
 
 jobs:
 
-  base:
-
-    runs-on: ubuntu-latest
-
-    steps:
-      - id:  prepare
-        run: |
-          if [ ${{ github.event.inputs.static }} = true ] ; then
-            FSLE=--static
-          else
-            FSLE=
-          fi
-
-          if [ ${{ github.event.inputs.pagesize }} = '16KB' ] ; then
-            NDK_REVISION='28c'
-          else
-            NDK_REVISION='27d'
-          fi
-
-          case ${{ github.event.inputs.log-level }} in
-            normal)         LOG_LEVEL=''   ;;
-            quiet)          LOG_LEVEL='-q' ;;
-            verbose)        LOG_LEVEL='-v' ;;
-            'very-verbose') LOG_LEVEL='-x' ;;
-          esac
-
-          INSTALL_ARGS="$FSLE $LOG_LEVEL --ndk-revision=$NDK_REVISION"
-
-          printf 'INSTALL_ARGS=%s\n' "$INSTALL_ARGS" >> "$GITHUB_OUTPUT"
-
-    outputs:
-      install-args: ${{ steps.prepare.outputs.INSTALL_ARGS }}
-
-
-
   build:
-    needs: base
 
     runs-on: ubuntu-latest
 
@@ -138,7 +106,25 @@ jobs:
       - run: ./ndk-pkg setup
       - run: ./ndk-pkg sysinfo
       - run: ./ndk-pkg update
-      - run: ./ndk-pkg install android-${{ github.event.inputs.target-api }}-${{ github.event.inputs.target-abis }}/${{ github.event.inputs.package-name }} --profile=${{ github.event.inputs.profile }} ${{ needs.base.outputs.install-args }}
+
+      - id:  prepare
+        run: |
+          if [ ${{ github.event.inputs.static }} = true ] ; then
+            FSLE=--static
+          else
+            FSLE=
+          fi
+
+          case ${{ github.event.inputs.log-level }} in
+            normal)         LOG_LEVEL=''   ;;
+            quiet)          LOG_LEVEL='-q' ;;
+            verbose)        LOG_LEVEL='-v' ;;
+            'very-verbose') LOG_LEVEL='-x' ;;
+          esac
+
+          printf 'INSTALL_ARGS=%s\n' "$FSLE $LOG_LEVEL" >> "$GITHUB_OUTPUT"
+
+      - run: ./ndk-pkg install android-${{ github.event.inputs.target-api }}-${{ github.event.inputs.target-abis }}/${{ github.event.inputs.package-name }} --profile=${{ github.event.inputs.profile }} --ndk-revision=${{ github.event.inputs.ndk-revision }} ${{ steps.prepare.outputs.INSTALL_ARGS }}
 
       - name: pack
         run: |
@@ -152,11 +138,10 @@ jobs:
 
       - run: du -sh *${{ github.event.inputs.bundle-type }}
 
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v6
         with:
           name: ${{ github.event.inputs.package-name }}---android-${{ github.event.inputs.target-api }}-${{ github.event.inputs.target-abis }}.${{ github.event.inputs.profile }}${{ github.event.inputs.bundle-type }}
           path: ./*${{ github.event.inputs.bundle-type }}
-
 
 
       - if: ${{ github.event.inputs.generate-maven-repo == 'true' }}
@@ -188,7 +173,7 @@ jobs:
           fi
 
       - if: ${{ github.event.inputs.generate-maven-repo == 'true' }}
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: ${{ github.event.inputs.package-name }}---android-${{ github.event.inputs.target-api }}-${{ github.event.inputs.target-abis }}-maven-local-repository-bundle.tar.xz
           path: maven-local-repository-bundle.tar.xz
