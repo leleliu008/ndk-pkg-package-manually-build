@@ -5,7 +5,7 @@ on:
     inputs:
 
       ndk-revision:
-        description: ndk revision to be used
+        description: the ndk revision to be used
         type: choice
         options:
           - '30'
@@ -14,17 +14,17 @@ on:
           - '27d'
 
       package-name:
-        description: input the package name to be built
+        description: the package name to be built
         required: true
         default: libz
 
       target-abis:
-        description: input the ABIs to be built for
+        description: the ABIs to be built for
         required: true
         default: arm64-v8a,armeabi-v7a,x86_64,x86
 
       target-api:
-        description: choose the min sdk api level to be built with
+        description: the min SDK API level to be built with
         type: choice
         options:
           - '37'
@@ -46,14 +46,14 @@ on:
           - '21'
 
       profile:
-        description: choose the build profile
+        description: the build profile
         type: choice
         options:
           - release
           - debug
 
       bundle-type:
-        description: choose the bundle type
+        description: the bundle type
         type: choice
         options:
           - .tar.xz
@@ -63,7 +63,7 @@ on:
           - .zip
 
       log-level:
-        description: choose the log level
+        description: the log level
         type: choice
         options:
           - 'normal'
@@ -90,7 +90,7 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    container: ubuntu:24.04
+    container: ubuntu:26.04
 
     steps:
       - run: df -h
