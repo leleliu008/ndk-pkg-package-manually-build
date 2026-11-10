@@ -4,15 +4,6 @@ on:
   workflow_dispatch:
     inputs:
 
-      ndk-revision:
-        description: the ndk revision to be used
-        type: choice
-        options:
-          - '30'
-          - '29'
-          - '28c'
-          - '27d'
-
       package-name:
         description: the package name to be built
         required: true
@@ -44,6 +35,15 @@ on:
           - '23'
           - '22'
           - '21'
+
+      ndk-revision:
+        description: the ndk revision to be used
+        type: choice
+        options:
+          - '30'
+          - '29'
+          - '28c'
+          - '27d'
 
       profile:
         description: the build profile
